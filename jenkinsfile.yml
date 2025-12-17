@@ -1,0 +1,33 @@
+pipeline {
+agent any
+
+stages {
+
+stage('Checkout Code') {
+steps {
+checkout scm
+}
+}
+
+stage('Build JAR') {
+steps {
+bat './gradlew clean build'
+}
+}
+
+stage('Build Docker Image') {
+steps {
+bat 'docker build -t user-service:latest .'
+}
+}
+}
+
+post {
+success {
+echo 'Build & Docker image created successfully'
+}
+failure {
+echo 'Build failed'
+}
+}
+}
