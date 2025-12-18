@@ -16,11 +16,27 @@ pipeline {
                                  }
 
              stage('Build Docker Image') {
-                                           steps {
+                                            agent  {
+                                                    docker {
+                                                       image 'docker:27-cli'args '-v /var/run/docker.sock:/var/run/docker.sock'
+                                                            }
+                                                    }
+                                            steps {
                                                    sh 'docker build -t user-service:latest .'
                                                   }
-                                           }
-             }
+                                          }
+  
+            stage('Run Docker Container') {
+                                            agent {
+                                                  docker {
+                                                          image 'docker:27-cli'args '-v /var/run/docker.sock:/var/run/docker.sock'
+                                                          }
+                                                  }
+                                            steps {
+                                                    sh 'docker run -d --name user-service -p 8081:8080 user-service:latest'
+                                                  }
+                                            }
+            }
 
         post {
                success {
@@ -29,5 +45,5 @@ pipeline {
                failure {
                      echo 'Build failed'
                        }
-               }
+            }
 }
