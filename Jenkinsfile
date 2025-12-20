@@ -1,0 +1,42 @@
+pipeline {
+   agent any
+
+         stages {
+
+             stage('Checkout Code') {
+                                      steps {
+                                             git branch: 'main', url: 'https://github.com/mohit-jejurkar/user-service.git'
+                                            }
+                                      }
+
+             stage('Build JAR') {
+                                 steps {
+                                          sh './gradlew clean build -x test'
+                                        }
+                                 }
+
+             stage('Build Docker Image') {
+                                           
+                                            steps {
+                                                   sh 'docker build -t user-service:latest .'
+                                                  }
+                                          }
+  
+             stage('Run Docker Container') {
+                                       
+                                            steps {
+                                                    sh 'docker rm -f user-service || true'
+                                                    sh 'docker run -d --name user-service -p 8081:8080 user-service:latest'
+                                                  }
+                                            }
+            }
+
+        post {
+               success {
+                     echo 'Build & Docker image created successfully'
+                       }
+               failure {
+                     echo 'Build failed'
+                       }
+            }
+}
