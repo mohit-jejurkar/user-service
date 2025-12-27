@@ -11,9 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
+
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "transaction_logs")

@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Component
-@Service
  public interface UserService {
 
-    public UserResponse createUser(UserRequest userRequest);
+     UserResponse createUser(UserRequest userRequest);
 
 }

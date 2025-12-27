@@ -13,18 +13,12 @@ public class LoginRequest implements BaseRequest {
     @NotBlank(message = "username can not be blank")
     private String username;
 
+    @NotBlank(message = "password can not be blank")
     private String password;
 
     private String acknowledgementId = UUID.randomUUID().toString();
 
+    @NotBlank(message = "emailId can not be blank")
     private String emailId;
 
-
-
-
-    @JsonProperty("username")
-    public void setUsername(String username) {
-        this.username = username;
-        this.emailId = username; // ✅ set same value to emailId
-    }
 }

@@ -1,6 +1,7 @@
 package com.example.user_service.service.serviceImpl;
 
 import com.example.user_service.ExceptionUtils.CustomException;
+import com.example.user_service.common.Constant;
 import com.example.user_service.common.UserMapper;
 import com.example.user_service.dao.User;
 import com.example.user_service.dao.UserRepo;
@@ -12,16 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
-class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepo repo;
     private final TransactionService transactionService;
@@ -35,11 +34,13 @@ class UserServiceImpl implements UserService {
         try {
             User user = mapper.toEntity(request);
             user.setPassword(passwordEncoder.encode(request.getPassword()));
-            User save = repo.save(user);
-            transactionService.completeRequest(request);
-            return new UserResponse("User Created Successfully", save.getAcknowledgementId(), LocalDateTime.now(), "COMPLETED");
-        } catch (DataIntegrityViolationException ex){
-            throw new CustomException("Email Address is already present",409,request.getAcknowledgementId());
+            repo.save(user);
+            UserResponse userResponse = UserResponse.successResponse(request.getAcknowledgementId(), "User Created Successfully", Constant.Transaction.success);
+            transactionService.completeRequest(request, userResponse);
+            return userResponse;
+        } catch (DataIntegrityViolationException ex) {
+            transactionService.completeRequest(request, UserResponse.failure(request.getAcknowledgementId(), "USER ALREADY EXISTS", Constant.Transaction.error));
+            throw new CustomException("Email Address is already present", 409, request.getAcknowledgementId());
         }
     }
 

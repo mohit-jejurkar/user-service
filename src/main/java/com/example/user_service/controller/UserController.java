@@ -7,10 +7,14 @@ import com.example.user_service.dto.UserResponse;
 import com.example.user_service.service.TransactionService;
 import com.example.user_service.service.UserLogInService;
 import com.example.user_service.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,14 +31,20 @@ public class UserController {
     private final UserLogInService userLogInService;
     private final TransactionService transactionService;
 
-    @PostMapping(value = "/createUser", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest request,
-                                   @RequestHeader Map<String, Object> header,
-                                   final HttpServletRequest httpRequest
+    @Operation(summary = "Create User")
+    @PostMapping(
+            value = "/createUser",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> createUser(
+            @Valid @RequestBody UserRequest request,
+            @Parameter(hidden = true) @RequestHeader Map<String, Object> header,
+            HttpServletRequest httpRequest
     ) {
         transactionService.processRequest(request, "CREATE");
         var response = userService.createUser(request);
-        return ResponseEntity.created(URI.create("sdfsdfsd")).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping(value = "auth/login", consumes = "application/json", produces = "application/json")

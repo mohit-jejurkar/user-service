@@ -3,7 +3,7 @@ package com.example.user_service.ExceptionUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
+
 @Getter
 public class CustomException extends RuntimeException {
 

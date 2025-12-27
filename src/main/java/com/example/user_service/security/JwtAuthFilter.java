@@ -1,7 +1,6 @@
 package com.example.user_service.security;
 
 import io.jsonwebtoken.JwtException;
-import io.lettuce.core.json.JsonObject;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -33,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         try {
-            if ("/authenticate".equals(request.getServletPath()) || "/api/createUser".equals(request.getServletPath())) {
+            if (permitRequest(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -48,7 +46,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 filterChain.doFilter(request, response);
             }
-
         } catch (JwtException jwt) {
             this.sendError(response, 401, "Invalid Token");
         } catch (Exception e) {
@@ -67,6 +64,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
                 """.formatted(status, message);
         response.getWriter().write(errorResponse);
+    }
+
+    private boolean permitRequest(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.equals("/swagger-ui.html")
+                || path.equals("/authenticate")
+                || path.equals("/api/createUser");
+
     }
 
 }

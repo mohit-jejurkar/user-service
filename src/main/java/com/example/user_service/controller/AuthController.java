@@ -1,7 +1,9 @@
 package com.example.user_service.controller;
 
+import com.example.user_service.ExceptionUtils.CustomException;
 import com.example.user_service.dto.LoginRequest;
 import com.example.user_service.security.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -21,22 +22,22 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private  AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     private final JwtUtil jwtUtil;
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> login(
-            @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request) {
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
+                            request.getEmailId(),
                             request.getPassword())
             );
-        }catch (Exception e){
-           log.error( "    sfsdsdfsdfsfasf"+e.getStackTrace());
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage(), 401, "");
         }
 
         String token =

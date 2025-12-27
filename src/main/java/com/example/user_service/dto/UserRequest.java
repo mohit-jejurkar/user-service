@@ -33,7 +33,4 @@ public class UserRequest implements BaseRequest {
     @NotBlank(message = "Password is required")
     private String password;
 
-
-
-
 }

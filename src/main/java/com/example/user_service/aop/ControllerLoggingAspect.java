@@ -1,5 +1,9 @@
 package com.example.user_service.aop;
 
+import com.example.user_service.dto.LoginRequest;
+import com.example.user_service.dto.UserRequest;
+import com.example.user_service.service.BaseRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +19,13 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class ControllerLoggingAspect {
+
+    private final ObjectMapper objectMapper;
+
+    public ControllerLoggingAspect(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Around("execution(* com.example.user_service.controller..*(..))")
     public Object logController(ProceedingJoinPoint pjp) throws Throwable {
 
@@ -26,24 +37,29 @@ public class ControllerLoggingAspect {
         Object[] args = pjp.getArgs();
 
         String ackId = null;
-        String email = null;
 
-        for(Object arg: args){
-            if (arg instanceof com.example.user_service.dto.UserRequest userRequest) {
-                ackId = userRequest.getAcknowledgementId();
-                email = userRequest.getEmailId();
+        for (Object arg : args) {
+            if (arg instanceof LoginRequest || arg instanceof UserRequest) {
+
+                ackId = ((BaseRequest) arg).getAcknowledgementId();
+
                 break;
             }
         }
 
-        log.info("START | {} | ackId={} | email={} | ip={}",
-                pjp.getSignature().getName(), ackId, email, request.getRemoteAddr());
+        log.info("START | {} | ackId={}  | ip={}",
+                pjp.getSignature().getName(), ackId, request.getRemoteAddr());
 
-        Object result = pjp.proceed();
+        Object result = null;
+        try {
+            result = pjp.proceed();
+        } finally {
+            log.info("END | {} | ackId={} | timeTaken={}ms",
+                    pjp.getSignature().getName(), ackId, System.currentTimeMillis() - start);
+        }
 
-        log.info("END | {} | ackId={} | timeTaken={}ms",
-                pjp.getSignature().getName(), ackId, System.currentTimeMillis() - start);
 
         return result;
     }
+
 }
