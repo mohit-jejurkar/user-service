@@ -4,7 +4,8 @@ A stateless authentication service built with Spring Boot 3 and Spring Security 
 
 This project is designed as an Auth Provider, responsible only for identity creation, authentication, and token issuance.
 
-** Features**
+## **Features**
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 User registration with BCrypt password hashing
 
@@ -22,19 +23,20 @@ Fully exposed REST APIs
 
 Dockerized application with CI pipeline support
 
-** API Endpoints**
+## **-API Endpoints**
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________
 Create User
 POST api/create-users
 
 Login
 POST api/auth/login
 
-
 Returns:
 
 { "token": "<JWT_TOKEN>" }
 
-**- Design Notes**
+## **-Design Notes**
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 New users are assigned the USER role by default
 
@@ -44,11 +46,12 @@ Authentication is handled by Spring Security, not manual credential checks
 
 The project intentionally avoids overengineering (OAuth, sessions, refresh tokens)
 
-**- Database (PostgreSQL)**
+## **-Database (PostgreSQL)**
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 Uses PostgreSQL for persistent storage
 
-**- Docker & CI/CD**
+**-Docker & CI/CD**
 
 Application is Dockerized using a multi-stage Docker build
 
@@ -63,6 +66,7 @@ Builds Docker image on every push
 Ready for deployment to container platforms
 
 **- Tech Stack**
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 Java 17 • Spring Boot 3 • Spring Security 6 • JWT • JPA • Gradle • docker  • CICD
 
