@@ -12,7 +12,7 @@ Centralized global exception handling
 Fully exposed REST APIs
 Dockerized application with CI pipeline support
 
-## API Endpoints
+### API Endpoints
 Create User
 POST api/create-users
 
@@ -21,27 +21,27 @@ POST api/auth/login
 Returns:
 { "token": "<JWT_TOKEN>" }
 
-## Design Notes
+### Design Notes
 New users are assigned the USER role by default
 JWT is issued by this service and intended to be validated by downstream services
 Authentication is handled by Spring Security, not manual credential checks
 The project intentionally avoids overengineering (OAuth, sessions, refresh tokens)
 
-## Database (PostgreSQL)
+### Database (PostgreSQL)
 Uses PostgreSQL for persistent storage
 
-## Docker & CI/CD
+### Docker & CI/CD
 Application is Dockerized using a multi-stage Docker build
 
-## GitHub Actions CI pipeline:
+### GitHub Actions CI pipeline:
 Builds the project
 Runs Gradle build
 Builds Docker image on every push
 Ready for deployment to container platforms
 
-## Tech Stack
+### Tech Stack
 Java 17 • Spring Boot 3 • Spring Security 6 • JWT • JPA • Gradle • docker  • CICD
 
-## Project Structure
+### Project Structure
 controller | service | dao | security | config | ExceptionUtils
 
