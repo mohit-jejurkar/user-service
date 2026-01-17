@@ -1,4 +1,4 @@
- **User Service – JWT Authentication**
+##  **User Service – JWT Authentication**
 
 A stateless authentication service built with Spring Boot 3 and Spring Security 6 for user registration and JWT-based login.
 
