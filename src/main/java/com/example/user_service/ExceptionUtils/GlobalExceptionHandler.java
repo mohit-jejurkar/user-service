@@ -19,7 +19,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
 
         Map<String, Object> errorResponse = new HashMap<>();
 
@@ -32,7 +32,11 @@ public class GlobalExceptionHandler {
         errorResponse.put( Constant.Request.status, HttpStatus.BAD_REQUEST.value());
         errorResponse.put( Constant.Request.error, "Validation Failed");
         errorResponse.put("errors", fieldErrors);
-        return errorResponse;
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+
     }
 
     @ExceptionHandler(CustomException.class)

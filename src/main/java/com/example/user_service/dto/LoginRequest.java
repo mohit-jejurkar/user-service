@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 public class LoginRequest implements BaseRequest {
 
-    @NotBlank(message = "username can not be blank")
+
     private String username;
 
     @NotBlank(message = "password can not be blank")

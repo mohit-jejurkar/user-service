@@ -42,7 +42,7 @@ public class UserLoginServiceImpl implements UserLogInService {
                 transactionService.completeRequest(request, UserResponse.failure(request.getAcknowledgementId(), "USER DOESN'T EXITS", Constant.Transaction.error));
                 throw new CustomException("User doesn't exist", 404, request.getAcknowledgementId());
             } else if (passwordEncoder.matches(request.getPassword(), byEmailId.get().getPassword())) {
-                transactionService.completeRequest(request, UserResponse.successResponse(request.getAcknowledgementId(), "LOGIN SUCCESS ",Constant.Request.success));
+                transactionService.completeRequest(request, UserResponse.successResponse(request.getAcknowledgementId(), "LOGIN SUCCESS",Constant.Request.success));
                 return new UserResponse(Constant.Request.success, request.getAcknowledgementId(), LocalDateTime.now(),Constant.Transaction.completed );
             } else {
                 transactionService.completeRequest(request, UserResponse.failure(request.getAcknowledgementId(), "INVALID PASSWORD",Constant.Transaction.error));
